@@ -14,7 +14,7 @@
                WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
                See the License for the specific language governing permissions and
                limitations under the License.
-               
+
  Description : Module that handles variable declarations and function arguments from the original code.
  			   IMPORTANT NOTE: Supports only EXPLICITLY declared variables.
  =======================================================================================================
@@ -23,8 +23,8 @@
 package var_processor
 
 import (
+	. "github.com/DeusCoNWeT/GOpenMP_Project/goprep"
 	"go/token"
-	. "goprep"
 )
 
 // Stack of bools, model with a slice.
@@ -216,7 +216,7 @@ func Var_concat(a, b []Variable) []Variable {
 	return a
 }
 
-// Function that stores the variables from simple declarations (public). 
+// Function that stores the variables from simple declarations (public).
 func Var_simple_processor(tok Token, in chan Token, out chan string, sync chan interface{}) []Variable {
 	var listAux []Variable
 	var tipe string = ""
@@ -300,7 +300,8 @@ func Var_simple_processor(tok Token, in chan Token, out chan string, sync chan i
 	}
 	return listAux
 }
-// Function that stores the variables from multiple declarations (public). 
+
+// Function that stores the variables from multiple declarations (public).
 func Var_multi_processor(tok Token, in chan Token, out chan string, sync chan interface{}) []Variable {
 	var listAux []Variable
 	var tipe string = ""
@@ -362,7 +363,7 @@ func Var_multi_processor(tok Token, in chan Token, out chan string, sync chan in
 	return listAux
 }
 
-// Function that stores the arguments from functions declarations (public). 
+// Function that stores the arguments from functions declarations (public).
 func Var_argument_processor(tok Token, in chan Token, out chan string, sync chan interface{}, varLocalList []Variable) []Variable {
 	var tipe string = ""
 	var variable Variable

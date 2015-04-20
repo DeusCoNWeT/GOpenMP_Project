@@ -14,28 +14,28 @@
                WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
                See the License for the specific language governing permissions and
                limitations under the License.
-               
+
  Description : Module that handles loops inside a pragma parallel for.
                Loop valid structure:
-               
+
                for  init-expr , var relop b , incr-expr
-               
+
                Where,
-               
+
                - “init-expr”: initialization of “var” variable (loop variable), by an integer expression.
                - “relop”: valid operators <, <=, >, >=.
                - “b”: integer expression.
                - “incr-expr”: Increase or decrease of “var”, in a integer number,
-                  using a standard operator (++, --,  +=, -=), or by the form “var = var + incr”. 
+                  using a standard operator (++, --,  +=, -=), or by the form “var = var + incr”.
  ==========================================================================================================
 */
 
 package for_parallel_processor
 
 import (
+	. "github.com/DeusCoNWeT/GOpenMP_Project/goprep"
+	. "github.com/DeusCoNWeT/GOpenMP_Project/var_processor"
 	"go/token"
-	. "goprep"
-	. "var_processor"
 )
 
 // Private token work functions.
@@ -108,10 +108,10 @@ func add_element(id string, privateList []string) []string {
 	for i := range privateList {
 		if id == privateList[i] {
 			break
-		}else{
+		} else {
 			element := id + " int"
 			privateList = append(privateList, element)
-			}
+		}
 	}
 	return privateList
 }
@@ -132,9 +132,9 @@ func For_parallel_declare(tok Token, in chan Token, out chan string, sync chan i
 	tok = <-in
 	if tok.Token != token.DEFINE && tok.Token != token.ASSIGN {
 		panic("Error: Loop variable must be defined implicitly.")
-	}else{
+	} else {
 		assign = tok.Str
-		}
+	}
 	out <- ":="
 	sync <- nil
 	tok = <-in
@@ -212,11 +212,11 @@ func For_parallel_declare(tok Token, in chan Token, out chan string, sync chan i
 		if tok.Token != token.INT {
 			panic("Error: Variable \"" + tok.Str + "\" must be an integer.")
 		}
-		steps  = tok.Str
+		steps = tok.Str
 		// Rewrite the loop
 		eliminateToken(out, sync)
 		tok = <-in
 	}
-	num_iter = "(" + fin + " + " + inc + ") / " + steps  // String: "(fin + inc) / steps"
+	num_iter = "(" + fin + " + " + inc + ") / " + steps // String: "(fin + inc) / steps"
 	return num_iter, ini, var_indice, assign, tok
-	}
+}

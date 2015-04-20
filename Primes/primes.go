@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"gomp_lib"
+	"github.com/DeusCoNWeT/GOpenMP_Project/gomp_lib"
 )
 
 func prime_number(n int) int {
@@ -12,16 +12,16 @@ func prime_number(n int) int {
 	var total int = 0
 
 	//pragma gomp parallel for shared(n) private(i, j, prime) reduction (+:total)
-		for i = 2; i <= n; i++ {
-			prime = 1
-			for j = 2; j < i; j++ {
-				if i%j == 0 {
-					prime = 0
-					break
-				}
+	for i = 2; i <= n; i++ {
+		prime = 1
+		for j = 2; j < i; j++ {
+			if i%j == 0 {
+				prime = 0
+				break
 			}
-			total = total + prime
 		}
+		total = total + prime
+	}
 	return total
 }
 
@@ -47,7 +47,7 @@ func prime_number_sweep(n_lo int, n_hi int, n_factor int) {
 		wtime = gomp_lib.Gomp_get_wtime() - wtime
 
 		fmt.Printf("  %8d %8d %14f \n", n, primes, wtime)
-		
+
 		n = n * n_factor
 	}
 
@@ -55,10 +55,10 @@ func prime_number_sweep(n_lo int, n_hi int, n_factor int) {
 
 func main() {
 
-	var	n_factor int
-	var	n_hi int
+	var n_factor int
+	var n_hi int
 	var n_lo int
-	
+
 	fmt.Print("\n")
 	fmt.Println("PRIME_GOPENMP")
 	fmt.Println("  Go/OpenMP version")
@@ -70,13 +70,13 @@ func main() {
 	n_hi = 131072
 	n_factor = 2
 
-	prime_number_sweep ( n_lo, n_hi, n_factor )
+	prime_number_sweep(n_lo, n_hi, n_factor)
 
 	n_lo = 5
 	n_hi = 500000
 	n_factor = 10
 
-	prime_number_sweep ( n_lo, n_hi, n_factor )
+	prime_number_sweep(n_lo, n_hi, n_factor)
 
 	fmt.Print("\n")
 	fmt.Println("PRIME_OPENMP")

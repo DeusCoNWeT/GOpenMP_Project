@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	//. "gomp_lib"
+	//. "github.com/DeusCoNWeT/GOpenMP_Project/gomp_lib"
 	"io/ioutil"
 	"log"
 	"os"
@@ -12,8 +12,8 @@ import (
 )
 
 type cc struct {
-	linea	[]int
-	cont	int
+	linea []int
+	cont  int
 }
 
 var _numCPUs = runtime.NumCPU()
@@ -21,7 +21,7 @@ var _numCPUs = runtime.NumCPU()
 func _init_numCPUs() {
 	runtime.GOMAXPROCS(_numCPUs)
 }
-func duplicar(a []byte, n int) []byte {	/*
+func duplicar(a []byte, n int) []byte { /*
 	   Esta funcion copiara el texto de nuevo sobre el mismo fichero para asi
 	   duplicar el tamaño y hacer busquedas mayores para testear la escalabilidad
 	   Tener en cuenta que la duplicacion es secuencial (escritura unica)
@@ -33,7 +33,7 @@ func duplicar(a []byte, n int) []byte {	/*
 	}
 	return a
 }
-func analisis(texto []byte, num_threads int, toFind string) []cc {	/*
+func analisis(texto []byte, num_threads int, toFind string) []cc { /*
 		Esta funcion recibe el texto a parsear, el numero de threads que llevaran
 		a cabo dicha operacion y el elemento a encontrar dentro del texto y
 		devolvera donde aparece el texto cada vez que lo detecta.
@@ -57,7 +57,7 @@ func analisis(texto []byte, num_threads int, toFind string) []cc {	/*
 				linea.
 			*/
 			b_0 := make([]map[string]cc, len(b_1))
-			for i := 0; i < len(b_1); i++ {	/*
+			for i := 0; i < len(b_1); i++ { /*
 					Creamos los mapas dentro del slice, sino nil.
 				*/
 				b_0[i] = make(map[string]cc)
@@ -65,7 +65,7 @@ func analisis(texto []byte, num_threads int, toFind string) []cc {	/*
 					Hacemos la division de cada linea de texto por palabras.
 				*/
 				b_2 := strings.Split(b_1[i], " ")
-				for j := 0; j < len(b_2); j++ {	/*
+				for j := 0; j < len(b_2); j++ { /*
 						Si la palabra es la que estamos buscando añadimos al resultado
 						en que linea esta y al contador general tambien.
 					*/

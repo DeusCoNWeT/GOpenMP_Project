@@ -14,7 +14,7 @@
                WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
                See the License for the specific language governing permissions and
                limitations under the License.
-               
+
  Description : Module that handles import declarations from the original code (especially "runtime").
  =====================================================================================================
 */
@@ -22,8 +22,8 @@
 package import_processor
 
 import (
+	. "github.com/DeusCoNWeT/GOpenMP_Project/goprep"
 	"go/token"
-	. "goprep"
 )
 
 // Private token work functions.

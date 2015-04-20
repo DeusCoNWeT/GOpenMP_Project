@@ -3,12 +3,12 @@
 package main
 
 import (
-	"os"
-	"strings"
-	. "io/ioutil"
 	"fmt"
-	"gomp_lib"
+	"github.com/DeusCoNWeT/GOpenMP_Project/gomp_lib"
+	. "io/ioutil"
+	"os"
 	"strconv"
+	"strings"
 )
 
 import "runtime"

@@ -14,28 +14,28 @@
                WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
                See the License for the specific language governing permissions and
                limitations under the License.
-               
+
  Description : Module that handles loops inside a pragma for.
                Loop valid structure:
-               
+
                for  init-expr , var relop b , incr-expr
-               
+
                Where,
-               
+
                - “init-expr”: initialization of “var” variable (loop variable), by an integer expression.
                - “relop”: valid operators <, <=, >, >=.
                - “b”: integer expression.
                - “incr-expr”: Increase or decrease of “var”, in a integer number,
-                  using a standard operator (++, --,  +=, -=), or by the form “var = var + incr”. 
+                  using a standard operator (++, --,  +=, -=), or by the form “var = var + incr”.
  ==========================================================================================================
 */
 
 package for_processor
 
 import (
+	. "github.com/DeusCoNWeT/GOpenMP_Project/goprep"
+	. "github.com/DeusCoNWeT/GOpenMP_Project/var_processor"
 	"go/token"
-	. "goprep"
-	. "var_processor"
 )
 
 // Private token work functions.
@@ -108,10 +108,10 @@ func add_element(id string, privateList []string) []string {
 	for i := range privateList {
 		if id == privateList[i] {
 			break
-		}else{
+		} else {
 			element := id + " int"
 			privateList = append(privateList, element)
-			}
+		}
 	}
 	return privateList
 }
@@ -131,9 +131,9 @@ func For_declare(tok Token, in chan Token, out chan string, sync chan interface{
 	tok = <-in
 	if tok.Token != token.DEFINE && tok.Token != token.ASSIGN {
 		panic("Error: Loop variable must be defined implicitly.")
-	}else{
+	} else {
 		assign = tok.Str
-		}
+	}
 	eliminateToken(out, sync)
 	tok = <-in
 	if tok.Token != token.INT {
@@ -201,7 +201,7 @@ func For_declare(tok Token, in chan Token, out chan string, sync chan interface{
 	}
 	num_iter = "(" + fin + " + " + inc + ") / " + steps // String "(fin + inc) / steps"
 	if for_threads == "1" {
-		out <- var_indice + assign + " " + routine_num + "; "+ var_indice + " < " + num_iter + "; " + var_indice + "++"
+		out <- var_indice + assign + " " + routine_num + "; " + var_indice + " < " + num_iter + "; " + var_indice + "++"
 		sync <- nil
 		tok = <-in
 	} else {

@@ -2,9 +2,9 @@
 package main
 
 import (
+	"math/rand"
 	"os"
 	"strconv"
-	"math/rand"
 )
 
 import "runtime"
