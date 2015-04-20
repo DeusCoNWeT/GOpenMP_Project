@@ -23,16 +23,16 @@ package main
 
 import (
 	"fmt"
-	. "for_parallel_processor"
-	. "for_processor"
+	. "github.com/DeusCoNWeT/GOpenMP_Project/for_parallel_processor"
+	. "github.com/DeusCoNWeT/GOpenMP_Project/for_processor"
+	"github.com/DeusCoNWeT/GOpenMP_Project/gomp_lib"
+	. "github.com/DeusCoNWeT/GOpenMP_Project/goprep"
+	"github.com/DeusCoNWeT/GOpenMP_Project/import_processor"
+	. "github.com/DeusCoNWeT/GOpenMP_Project/pragma_processor"
+	. "github.com/DeusCoNWeT/GOpenMP_Project/var_processor"
 	"go/token"
-	"gomp_lib"
-	. "goprep"
-	"import_processor"
 	"os"
-	. "pragma_processor"
 	"strings"
-	. "var_processor"
 	// "runtime"
 	"strconv"
 )
@@ -576,7 +576,7 @@ func pragma_rewrite(tok Token, in chan Token, out chan string, sync chan interfa
 		tok = <-in // "for" token
 		fmt.Println("  Variables declared before For block:", varGlobalList, varLocalList)
 		tok = For_declare(tok, in, out, sync, varGlobalList, varLocalList, routine_num, for_threads)
-		fmt.Println("  Parallelized loop iterations:", iterations)
+		fmt.Println("Parallelized loop iterations:", iterations)
 
 		// PRIVATE VARIABLES
 		privateListUntyped := declareListUntyped(pragma)
@@ -646,7 +646,6 @@ func main() {
 		tOut chan Token,
 		out chan string,
 		sync chan interface{}) {
-		var numImprt int = 0         // Initializes import declarations counter.
 		var numFunc int = 0          // Initializes function counter of the original code.
 		var numBarriers int = 0      // Inicializes barrier counter.
 		var in_parallel bool = false // Inside parallel block?
@@ -673,7 +672,6 @@ func main() {
 
 			case tok.Token == token.IMPORT: // Import treatment
 				import_processor.Imports_declare(tok, in, out, sync)
-				numImprt++
 				continue
 
 			case tok.Token == token.FUNC: // Variable _numCPUs treatment
@@ -682,16 +680,9 @@ func main() {
 				var varLocalList []Variable // Local variable list of a function.
 				if numFunc == 0 {           // First function declare in the original code.
 					numFunc++
-					if numImprt == 0 && num_dec == 0 { // No imports declare in code.
-						numImprt++
-						out <- "import \"runtime\"\n" + "var _numCPUs = runtime.NumCPU()\n" + "func _init_numCPUs(){\n" + "runtime.GOMAXPROCS(_numCPUs)\n" + "}\n" + tok.Str
-						sync <- nil
-						tok = <-in
-					} else {
-						out <- "var _numCPUs = runtime.NumCPU()\n" + "func _init_numCPUs(){\n" + "runtime.GOMAXPROCS(_numCPUs)\n" + "}\n" + tok.Str
-						sync <- nil
-						tok = <-in
-					}
+					out <- "var _numCPUs = runtime.NumCPU()\n" + "func _init_numCPUs(){\n" + "runtime.GOMAXPROCS(_numCPUs)\n" + "}\n" + tok.Str
+					sync <- nil
+					tok = <-in
 					fmt.Println("  Now entering the first function:", tok.Str)
 					if tok.Str == "main" { // First function is the "main" funtion.
 						for tok.Token != token.LPAREN {
@@ -922,16 +913,8 @@ func main() {
 				}
 			case tok.Str == "var": // Variable declaration treatment
 				num_dec++ // Variable declaration counter (test only)
-				if numImprt == 0 {
-					numImprt++
-					out <- "import \"runtime\"\n" + tok.Str
-					sync <- nil
-					tok = <-in
-				} else {
-					passToken(tok, out, sync)
-					tok = <-in
-				}
-
+				passToken(tok, out, sync)
+				tok = <-in
 				fmt.Println("  Global variable:", tok.Str)
 				if tok.Token == token.LPAREN {
 					// Simple declaration
